@@ -1,6 +1,8 @@
 # kindle-fltk-rs
 Sample calculator program using Rust and FLTK for Kindle GUI development on jailbroken `kindlehf`
 
+![Calculator running on Kindle](./demo.png)
+
 `armv7-unknown-linux-gnueabi` (`kindlepw2`) build currently fails at `cannot find -lXcursor: No such file or directory`.
 Contributions are welcome.
 
@@ -13,8 +15,7 @@ Contributions are welcome.
 
 ## Build
 ### Prerequisites
-- Build tools for your platform
-
+- Build tools for your platform (e.g. `build-essential`, `base-devel` etc.)
 - [rust and cargo](https://rustup.rs/)
 - [cross-rs](https://github.com/cross-rs/cross)
 ```
