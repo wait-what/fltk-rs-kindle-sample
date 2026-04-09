@@ -1,0 +1,15 @@
+[target.armv7-unknown-linux-gnueabihf]
+linker = "/home/user/x-tools/arm-kindlehf-linux-gnueabihf/bin/arm-kindlehf-linux-gnueabihf-gcc"
+ar = "/home/user/x-tools/arm-kindlehf-linux-gnueabihf/bin/arm-kindlehf-linux-gnueabihf-ar"
+rustflags = [
+    "-C", "link-arg=--sysroot=/home/user/x-tools/arm-kindlehf-linux-gnueabihf/arm-kindlehf-linux-gnueabihf/sysroot",
+    "-C", "link-arg=-Wl,--dynamic-linker=/lib/ld-linux-armhf.so.3"
+]
+
+[target.armv7-unknown-linux-gnueabi]
+linker = "/home/user/x-tools/arm-kindlepw2-linux-gnueabi/bin/arm-kindlepw2-linux-gnueabi-gcc"
+ar = "/home/user/x-tools/arm-kindlepw2-linux-gnueabi/bin/arm-kindlepw2-linux-gnueabi-ar"
+rustflags = [
+    "-C", "link-arg=--sysroot=/home/user/x-tools/arm-kindlepw2-linux-gnueabi/arm-kindlepw2-linux-gnueabi/sysroot",
+    "-C", "link-arg=-Wl,--dynamic-linker=/lib/ld-linux-arm.so.3"
+]
