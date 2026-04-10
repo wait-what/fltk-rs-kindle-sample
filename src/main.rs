@@ -1,9 +1,9 @@
 use fltk::{
     app,
     button::Button,
-    enums::{Color, Key, Shortcut},
+    enums::{Align, Color, Event, FrameType, Key, Shortcut},
+    frame::Frame,
     group::{Pack, PackType},
-    output::Output,
     prelude::*,
     window::Window,
 };
@@ -35,21 +35,17 @@ struct MyButton {
 
 impl MyButton {
     pub fn new(title: &'static str) -> MyButton {
-        let mut b = Button::new(0, 0, 90, 0, title);
-        b.set_label_size(20);
-        b.set_compact(true);
+        let mut b = Button::new(0, 0, 100, 0, title);
+        b.set_label_size(24);
+        b.set_frame(FrameType::FlatBox);
         match title {
-            "0" => {
-                b.resize(0, 0, 90 * 2, 0);
-                b.set_color(Color::Light3);
-                b.set_shortcut(Shortcut::None | '0');
-            }
             "CE" => {
-                b.set_color(Color::Red);
+                b.set_color(Color::from_hex(0xd50000));
                 b.set_shortcut(Shortcut::None | Key::Delete);
             }
             "x" | "/" | "+" | "-" | "=" | "C" | "@<-" => {
-                b.set_color(Color::Yellow);
+                b.set_color(Color::from_hex(0xffee58));
+                b.set_label_color(Color::Black);
                 let shortcut = if title == "x" {
                     '*'
                 } else {
@@ -64,8 +60,25 @@ impl MyButton {
                 }
             }
             _ => {
-                b.set_color(Color::Light3);
+                if title == "0" {
+                    b.resize(0, 0, 100 * 2, 0);
+                }
+                b.set_label_color(Color::White);
+                b.set_selection_color(Color::from_hex(0x1b1b1b));
                 b.set_shortcut(Shortcut::None | title.chars().next().unwrap());
+                b.handle(move |b, ev| match ev {
+                    Event::Enter => {
+                        b.set_color(Color::from_hex(0x2b2b2b));
+                        b.redraw();
+                        true
+                    }
+                    Event::Leave => {
+                        b.set_color(Color::from_hex(0x424242));
+                        b.redraw();
+                        true
+                    }
+                    _ => false,
+                });
             }
         }
         Self { b }
@@ -88,10 +101,12 @@ impl DerefMut for MyButton {
 
 fn main() {
     let app = app::App::default();
+    app::set_visible_focus(false);
+    app::background(0x42, 0x42, 0x42);
+
     let win_w = 400;
     let win_h = 500;
-    let border = 20;
-    let but_row = 180;
+    let but_row = 160;
 
     let mut operation = Ops::None;
     let mut txt = String::from("0");
@@ -102,15 +117,17 @@ fn main() {
         .with_label("L:A_N:application_PC:TS_ID:com.waitwhat.calculator");
         // .with_size(win_w, win_h)
         // .center_screen();
-    wind.set_color(Color::Light3);
 
-    let mut out = Output::new(border, border, win_w - 40, 140, "");
-    out.set_text_size(36);
-    out.set_value("0");
+    let mut out = Frame::new(0, 0, win_w, 160, "").with_align(Align::Right | Align::Inside);
+    out.set_color(Color::from_hex(0x1b1b1b));
+    out.set_frame(FrameType::FlatBox);
+    out.set_label_color(Color::White);
+    out.set_label_size(36);
+    out.set_label("0");
 
-    let vpack = Pack::new(border, but_row, win_w - 40, 300, "");
+    let vpack = Pack::new(0, but_row, win_w, win_h - 170, "");
 
-    let mut hpack = Pack::new(0, 0, win_w - 40, 60, "");
+    let mut hpack = Pack::new(0, 0, win_w, 68, "");
     let but_ce = MyButton::new("CE");
     let but_c = MyButton::new("C");
     let but_back = MyButton::new("@<-");
@@ -118,7 +135,7 @@ fn main() {
     hpack.end();
     hpack.set_type(PackType::Horizontal);
 
-    let mut hpack = Pack::new(0, 0, win_w - 40, 60, "");
+    let mut hpack = Pack::new(0, 0, win_w, 68, "");
     let mut but7 = MyButton::new("7");
     let mut but8 = MyButton::new("8");
     let mut but9 = MyButton::new("9");
@@ -126,7 +143,7 @@ fn main() {
     hpack.end();
     hpack.set_type(PackType::Horizontal);
 
-    let mut hpack = Pack::new(0, 0, win_w - 40, 60, "");
+    let mut hpack = Pack::new(0, 0, win_w, 68, "");
     let mut but4 = MyButton::new("4");
     let mut but5 = MyButton::new("5");
     let mut but6 = MyButton::new("6");
@@ -134,7 +151,7 @@ fn main() {
     hpack.end();
     hpack.set_type(PackType::Horizontal);
 
-    let mut hpack = Pack::new(0, 0, win_w - 40, 60, "");
+    let mut hpack = Pack::new(0, 0, win_w, 68, "");
     let mut but1 = MyButton::new("1");
     let mut but2 = MyButton::new("2");
     let mut but3 = MyButton::new("3");
@@ -142,7 +159,7 @@ fn main() {
     hpack.end();
     hpack.set_type(PackType::Horizontal);
 
-    let mut hpack = Pack::new(0, 0, win_w - 40, 60, "");
+    let mut hpack = Pack::new(0, 0, win_w, 68, "");
     let mut but_dot = MyButton::new(".");
     let mut but0 = MyButton::new("0");
     let but_eq = MyButton::new("=");
@@ -153,9 +170,10 @@ fn main() {
 
     wind.make_resizable(false);
     wind.end();
-    wind.show_with_args(&["-scheme", "gtk+", "-nokbd"]);
+    wind.show();
 
     app::set_focus(&*but1);
+    app::get_system_colors();
 
     let but_vec = vec![
         &mut but1, &mut but2, &mut but3, &mut but4, &mut but5, &mut but6, &mut but7, &mut but8,
@@ -194,53 +212,53 @@ fn main() {
         if let Some(val) = r.recv() {
             match val {
                 Message::Number(num) => {
-                    if out.value() == "0" {
+                    if out.label() == "0" {
                         txt.clear();
                     }
                     txt.push_str(&num.to_string());
-                    out.set_value(txt.as_str());
+                    out.set_label(txt.as_str());
                 }
                 Message::Dot => {
                     if operation == Ops::Eq {
                         txt.clear();
                         operation = Ops::None;
-                        out.set_value("0.");
+                        out.set_label("0.");
                         txt.push_str("0.");
                     }
                     if !txt.contains('.') {
                         txt.push('.');
-                        out.set_value(txt.as_str());
+                        out.set_label(txt.as_str());
                     }
                 }
                 Message::Op(op) => match op {
                     Ops::Add | Ops::Sub | Ops::Div | Ops::Mul => {
                         old_val.clear();
-                        old_val.push_str(&out.value());
+                        old_val.push_str(&out.label());
                         operation = op;
-                        out.set_value("0");
+                        out.set_label("0");
                     }
                     Ops::Back => {
-                        let val = out.value();
+                        let val = out.label();
                         txt.pop();
                         if val.len() > 1 {
-                            out.set_value(txt.as_str());
+                            out.set_label(txt.as_str());
                         } else {
-                            out.set_value("0");
+                            out.set_label("0");
                         }
                     }
                     Ops::CE => {
                         txt.clear();
                         old_val.clear();
                         txt.push('0');
-                        out.set_value(txt.as_str());
+                        out.set_label(txt.as_str());
                     }
                     Ops::C => {
                         txt.clear();
                         txt.push('0');
-                        out.set_value(txt.as_str());
+                        out.set_label(txt.as_str());
                     }
                     Ops::Eq => {
-                        new_val = out.value();
+                        new_val = out.label();
                         let old: f64 = old_val.parse().unwrap();
                         let new: f64 = new_val.parse().unwrap();
                         let val = match operation {
@@ -252,7 +270,7 @@ fn main() {
                         };
                         operation = Ops::None;
                         txt = String::from("0");
-                        out.set_value(&val.to_string());
+                        out.set_label(&val.to_string());
                     }
                     _ => (),
                 },
