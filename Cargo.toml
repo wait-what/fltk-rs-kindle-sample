@@ -1,14 +1,15 @@
 [package]
-name = "kindle-fltk-rs"
+name = "fltk-rs-kindle-sample"
 version = "0.1.0"
 edition = "2024"
 
 [profile.release]
-strip = true
-panic = "abort"
-lto = true
+lto = "fat"
 codegen-units = 1
-opt-level = "z"
 
 [dependencies]
 fltk = { git = "https://github.com/wait-what/fltk-rs-kindle", features = ["no-pango"] }
+# fltk = { path = "./fltk-rs-kindle/fltk", features = ["no-pango"] }
+
+[build-dependencies]
+cc = "1.2.60"
