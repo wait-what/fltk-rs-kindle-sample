@@ -56,9 +56,8 @@ checksum = "5baebc0774151f905a1a2cc41989300b1e6fbb29aff0ceffa1064fdd3088d582"
 
 [[package]]
 name = "fltk"
-version = "1.5.22"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ef591509a695d1f6ae5a1ff2b50bf98fb96a82c2d1f2a97b9103b762583c915"
+version = "1.5.23"
+source = "git+https://github.com/wait-what/fltk-rs-kindle#c0b5f2174c798c5fce41f1a550a2e47ea77a2067"
 dependencies = [
  "bitflags",
  "crossbeam-channel",
@@ -70,12 +69,18 @@ dependencies = [
 
 [[package]]
 name = "fltk-sys"
-version = "1.5.22"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d09bcc449403e8ef87799dc5c5a1e31469ad5affd1bcaaca3a15810aae4ff6f"
+version = "1.5.23"
+source = "git+https://github.com/wait-what/fltk-rs-kindle#c0b5f2174c798c5fce41f1a550a2e47ea77a2067"
 dependencies = [
  "cmake",
  "cmk",
+]
+
+[[package]]
+name = "kindle-fltk-rs"
+version = "0.1.0"
+dependencies = [
+ "fltk",
 ]
 
 [[package]]
@@ -100,13 +105,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fd00f0bb2e90d81d1044c2b32617f68fcb9fa3bb7640c23e9c748e53fb30934"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "sample"
-version = "0.1.0"
-dependencies = [
- "fltk",
 ]
 
 [[package]]

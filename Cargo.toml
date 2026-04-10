@@ -1,5 +1,5 @@
 [package]
-name = "sample"
+name = "kindle-fltk-rs"
 version = "0.1.0"
 edition = "2024"
 
@@ -11,4 +11,4 @@ codegen-units = 1
 opt-level = "z"
 
 [dependencies]
-fltk = { version = "1.5.22", features = ["no-pango"] }
+fltk = { git = "https://github.com/wait-what/fltk-rs-kindle", features = ["no-pango"] }
